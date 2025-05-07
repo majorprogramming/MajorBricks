@@ -1,24 +1,26 @@
-﻿namespace MajorBricks.UI;
+﻿using MajorBricks.Core.Models;
+using MajorBricks.UI.ViewModels;
+using Microsoft.Maui.Controls;
+
+namespace MajorBricks.UI;
+
 
 public partial class MainPage : ContentPage
 {
-	int count = 0;
+	 private MainPageViewModel ViewModel => (MainPageViewModel)BindingContext;
 
-	public MainPage()
+	public MainPage(MainPageViewModel viewModel)
 	{
-		InitializeComponent();
+		InitializeComponent(); 
+		BindingContext = viewModel;
 	}
 
-	private void OnCounterClicked(object sender, EventArgs e)
-	{
-		count++;
-
-		if (count == 1)
-			CounterBtn.Text = $"Clicked {count} time";
-		else
-			CounterBtn.Text = $"Clicked {count} times";
-
-		SemanticScreenReader.Announce(CounterBtn.Text);
-	}
+	protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+    // Seed, falls leer
+    
+    await ViewModel.LoadSetsCommand.ExecuteAsync(null);
+    }
 }
 
